@@ -102,16 +102,49 @@ Orientation.FLOOR
 arduino_data = {
   "panels": [
     "panel_1": {
-      
+      [
+        "edge_1": {
+          [
+            "corner_node_1": {
+              relative_location_1,
+              corner_node_3
+            },
+            "corner_node_2": {
+              relative_location_2,
+              corner_node_4
+            }
+          ],
+          [
+            "connector_node_1": {
+              relative_location_3,
+              connector_node_2
+            },
+            "connector_node_1": {
+              relative_location_4,
+              connector_node_2
+            }
+          ]
+        },
+        "edge_2": {
+          [corner_node_1, corner_node_2],
+          [connector_node_1, connector_node_2]
+        },
+        "edge_3": {
+          [corner_node_1, corner_node_2],
+          [connector_node_1, connector_node_2]
+        },
+        "edge_4": {
+          [corner_node_1, corner_node_2],
+          [connector_node_1, connector_node_2]
+        }
+      ],
+      absolute_location_1,
+      Orientation.FLOOR
     },
     "panel_2": {
-      
-    },
-    "panel_3": {
-      
-    },
-    "panel_4": {
-      
-    },
+      [edge_1, edge_2, edge_3, edge_4],
+      absolute_location_1,
+      Orientation.FLOOR
+    }
   ]
 }
