@@ -11,8 +11,11 @@ from src.node import Node, ConnectorNode, CornerNode
 ###############################################################################
 def test_node_initialization():
     edge = Edge(Panel(Orientation.FLOOR))
-    node = Node(edge)
+    location = Location(1, 2, 3)
+    node = Node(edge, location)
     assert node.edge == edge
+    assert node.location == location
+    assert node.mate == None
 
 def test_invalid_params_node_initialisation():
     with pytest.raises(TypeError):
