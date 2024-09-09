@@ -1,0 +1,117 @@
+# Class Map
+Panels
+* Panels have four edges
+* Panels have an absolute location
+* Panels have an orientation
+"panel_1": {
+  [edge_1, edge_2, edge_3, edge_4],
+  absolute_location_1,
+  Orientation.FLOOR
+}
+tests
+* Panels have four edges.
+* Panel's location is absolute not relative.
+
+Edges
+* Edges belong to a Panel
+* Edges have two corner nodes
+* Edges have one or two connector nodes
+* The corner nodes must be located multiples of 1.2m from each other
+* The connector nodes must be located 0.6m awa from the corner nodes
+* The connector nodes must be located on the geometric line between corner 
+  nodes
+"edge_1": {
+  [corner_node_1, corner_node_2],
+  [connector_node_1, connector_node_2]
+}
+
+Nodes
+* Belong to an Edge
+* Have a location that may be None
+
+CornerNodes
+* Inherits from Nodes
+* Can connect with one other corner node which must also connect with them
+tests
+* Corner nodes cannot connect with themselves.
+* Corner nodes cannot connect with other corners that belong to the same 
+  edge.
+* Corner nodes cannot connect with other corners that belong to a different
+  panel. 
+
+ConnectorNodes
+* Inherits from Nodes
+* Can connect with one other connector node which must also connect with them
+"connector_node_1": {
+  relative_location_1,
+  connector_node_2
+}
+tests
+* Connector nodes cannot connect with themselves.
+* Connector nodes cannot connect with other connectors that belong to the same 
+  edge.
+* Connector nodes cannot connect with other connectors that belong to the same 
+  panel.
+
+Location
+* Has x, y and z variables that are either all set to floating point numbers
+  or are all set to None.
+* The x, y and z values can be returned and changed.
+location_1 = {
+  "x": None,
+  "y": None,
+  "z": None
+}
+tests
+* Either x, y and z are all floating point or they are all None. 
+
+RelativeLocation
+* Inherits from Location
+* Belongs to a node
+relative_location_1 = {
+  "x": None,
+  "y": None,
+  "z": None,
+  connector_node_1
+}
+tests
+* Cannot be allocated to a panel.
+
+AbsoluteLocation
+* Inherits from Location
+* Belongs to a panel
+relative_location_1 = {
+  "x": None,
+  "y": None,
+  "z": None,
+  panel_1
+}
+tests
+* Cannot be allocated to a node.
+
+Orientation
+* Has three options "floor", "wall" and "roof"
+class Orientation(Enum):
+    FLOOR = "floor"
+    WALL = "wall"
+    ROOF = "roof"
+
+Orientation.FLOOR
+
+# Datastructure
+arduino_data = {
+  "panels": [
+    "panel_1": {
+      
+    },
+    "panel_2": {
+      
+    },
+    "panel_3": {
+      
+    },
+    "panel_4": {
+      
+    },
+  ]
+}
