@@ -24,10 +24,26 @@ def test_connector_node_initialization():
     edge = Edge(Panel(Orientation.FLOOR))
     connector_node = ConnectorNode(edge)
     assert connector_node.edge == edge
+    assert connector_node.mate == None
 
 def test_invalid_params_connector_node_initialisation():
     with pytest.raises(TypeError):
         connector_node = ConnectorNode("edge")
+
+def test_connector_nodes_mate_with_method():
+    edge = Edge(Panel(Orientation.FLOOR))
+    connector_node = ConnectorNode(edge)
+    edge_2 = Edge(Panel(Orientation.WALL))
+    connector_node_2 = ConnectorNode(edge_2)
+    edge_3 = Edge(Panel(Orientation.ROOF))
+    connector_node_3 = ConnectorNode(edge_3)
+    assert connector_node.mate == None
+    assert connector_node_2.mate == None
+
+    connector_node.mate_with(connector_node_3)
+    assert connector_node.mate == connector_node_3
+    assert connector_node_2.mate == None
+    assert connector_node_3.mate == connector_node
 
 ###############################################################################
 # CornerNode Tests
