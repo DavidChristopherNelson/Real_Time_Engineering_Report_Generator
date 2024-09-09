@@ -52,7 +52,23 @@ def test_corner_node_initialization():
     edge = Edge(Panel(Orientation.FLOOR))
     corner_node = CornerNode(edge)
     assert corner_node.edge == edge
+    assert corner_node.mate == None
 
 def test_invalid_params_corner_node_initialisation():
     with pytest.raises(TypeError):
         corner_node = CornerNode("edge")
+
+def test_corner_nodes_mate_with_method():
+    edge = Edge(Panel(Orientation.FLOOR))
+    corner_node = CornerNode(edge)
+    edge_2 = Edge(Panel(Orientation.WALL))
+    corner_node_2 = CornerNode(edge_2)
+    edge_3 = Edge(Panel(Orientation.ROOF))
+    corner_node_3 = CornerNode(edge_3)
+    assert corner_node.mate == None
+    assert corner_node_2.mate == None
+
+    corner_node.mate_with(corner_node_3)
+    assert corner_node.mate == corner_node_3
+    assert corner_node_2.mate == None
+    assert corner_node_3.mate == corner_node
