@@ -2,6 +2,7 @@ import pytest
 
 from src.edge import Edge
 from src.panel import Panel
+from src.location import Location
 from src.orientation import Orientation
 from src.node import Node, ConnectorNode, CornerNode
 
@@ -72,3 +73,19 @@ def test_corner_nodes_mate_with_method():
     assert corner_node.mate == corner_node_3
     assert corner_node_2.mate == None
     assert corner_node_3.mate == corner_node
+
+def test_corner_node_is_complete_method():
+    edge = Edge(Panel(Orientation.FLOOR))
+    corner_node = CornerNode(edge)
+    corner_node_3 = CornerNode(edge)
+    assert corner_node.is_complete() == False
+    location = Location(1, 2, 3)
+    corner_node.location = location
+    assert corner_node.is_complete() == False
+    edge_2 = Edge(Panel(Orientation.WALL))
+    corner_node_2 = CornerNode(edge_2)
+    corner_node.mate_with(corner_node_2)
+    assert corner_node.is_complete() == True
+    edge = Edge(Panel(Orientation.FLOOR))
+    corner_node.mate_with(corner_node_3)
+    assert corner_node.is_complete() == False

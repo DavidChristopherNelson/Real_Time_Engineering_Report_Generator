@@ -42,3 +42,8 @@ class Location:
     @z.setter
     def z(self, value):
         self._z = value
+
+    def __eq__(self, other):
+        if not isinstance(other, Location):
+            return False
+        return self._x == other.x and self._y == other.y and self.z == other.z
