@@ -42,6 +42,12 @@ class Edge:
     def corner_nodes(self, value):
         from .node import CornerNode
         validate_instance(value, list)
+        if len(value) > 2:
+            raise ValueError("An edge cannot have more than two corner nodes.")
+        elif len(value) == 2:
+            if value[0] == value[1]:
+                raise ValueError("""An edge cannot have two corner nodes be the 
+                             same instance""")
         for index, corner_node in enumerate(value):
             if not isinstance(corner_node, CornerNode): 
                 param_type = type(corner_node)
@@ -68,21 +74,3 @@ class Edge:
                                     ConnectorNode instances. param[{index}] is 
                                     a {param_type} not a ConnectorNode.""")
                 self._connector_nodes.append(connector_node)
-
-    def add_corner_nodes(self, value):
-        from .node import CornerNode
-        if (not isinstance(value, list) and 
-            not isinstance(value, CornerNode)):
-            raise TypeError("""Invalid parameter. Parameter must either be a 
-                            CornerNode instand or be a list of CornerNode 
-                            instances.""")
-        if isinstance(value, CornerNode):
-            self._corner_nodes.append(value)
-        else:
-            for index, corner_node in enumerate(value):
-                if not isinstance(corner_node, CornerNode):
-                    param_type = type(corner_node)
-                    raise TypeError("""All items in the list must be 
-                                    CornerNode instances. param[{index}] is 
-                                    a {param_type} not a CornerNode.""")
-                self._corner_nodes.append(corner_node)

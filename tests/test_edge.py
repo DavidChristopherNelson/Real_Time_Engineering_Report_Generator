@@ -15,7 +15,10 @@ def test_invalid_params_edge_initialisation():
     with pytest.raises(TypeError):
         edge = Edge("panel")
 
+###############################################################################
 # Test methods
+###############################################################################
+# Panel methods
 def test_edge_panel_getter_and_setter():
     panel = Panel(Orientation.FLOOR)
     panel_2 = Panel(Orientation.ROOF)
@@ -31,6 +34,7 @@ def test_edge_panel_setter_with_invalid_parameters():
     with pytest.raises(TypeError): 
         edge.panel = panel_2
 
+# ConnectorNodes methods
 def test_edge_connector_nodes_getter_and_setter():
     panel = Panel(Orientation.FLOOR)
     edge = Edge(panel)
@@ -79,31 +83,31 @@ def test_edge_add_connector_nodes_with_invalid_parameters():
     with pytest.raises(TypeError):
         edge.add_connector_nodes([ConnectorNode(edge),"ConnectorNode"])
 
-def test_edge_add_corner_nodes():
+# CornerNodes Methods
+def test_edge_corner_nodes_getter_and_setter():
     panel = Panel(Orientation.FLOOR)
     edge = Edge(panel)
+    assert edge.corner_nodes == []
     corner_node = CornerNode(edge)
-    edge.add_corner_nodes([corner_node])
+    edge.corner_nodes = [corner_node]
     assert edge.corner_nodes == [corner_node]
+
+def test_edge_corner_nodes_setter_with_invalid_parameters():
+    panel = Panel(Orientation.FLOOR)
+    edge = Edge(panel)
+    corner_node_string = "CornerNode"
+    corner_node = CornerNode(edge)
     corner_node_2 = CornerNode(edge)
     corner_node_3 = CornerNode(edge)
-    edge.add_corner_nodes([corner_node_2, corner_node_3])
-    assert edge.corner_nodes == [corner_node, 
-                                    corner_node_2, 
-                                    corner_node_3]
-    corner_node_4 = CornerNode(edge)
-    edge.add_corner_nodes(corner_node_4)
-    assert edge.corner_nodes == [corner_node, 
-                                    corner_node_2, 
-                                    corner_node_3,
-                                    corner_node_4]
-
-def test_edge_add_corner_nodes_with_invalid_parameters():
-    panel = Panel(Orientation.FLOOR)
-    edge = Edge(panel)
     with pytest.raises(TypeError):
-        edge.add_corner_nodes("CornerNode")
+        edge.corner_nodes = corner_node_string
     with pytest.raises(TypeError):
-        edge.add_corner_nodes(["CornerNode"])
+        edge.corner_nodes = [corner_node_string]
     with pytest.raises(TypeError):
-        edge.add_corner_nodes([CornerNode(edge),"CornerNode"])
+        edge.corner_nodes = [corner_node, corner_node_string]
+    # An edge is not allowed to have the two corners nodes be the same instance
+    with pytest.raises(ValueError):
+        edge.corner_nodes = [corner_node, corner_node]
+    # An edge cannot have three or more corner nodes
+    with pytest.raises(ValueError):
+        edge.corner_nodes = [corner_node, corner_node_2, corner_node_3]
