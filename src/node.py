@@ -1,10 +1,9 @@
 from .edge import Edge
+from .utility import validate_instance
 
 class Node: 
     def __init__(self, edge):
-        if not isinstance(edge, Edge):
-            raise TypeError("""Invalid parameter. Edge must be an 
-                            an instance of the Edge class""")
+        validate_instance(edge, Edge)
         self.edge = edge
 
 class ConnectorNode(Node):

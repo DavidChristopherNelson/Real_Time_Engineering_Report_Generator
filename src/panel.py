@@ -1,12 +1,11 @@
 from .orientation import Orientation
 from .location import Location
+from .utility import validate_instance
 
 class Panel:
     def __init__(self, _orientation, _location = None):
         # Parameter handling and assignment
-        if not isinstance(_orientation, Orientation):
-            raise TypeError("""Invalid parameter. Orientation must be an 
-                            an instance of the Orientation class""")
+        validate_instance(_orientation, Orientation)
         if _location is None:
             _location = Location(None, None, None)
         elif not isinstance(_location, Location):
@@ -24,9 +23,7 @@ class Panel:
 
     @orientation.setter
     def orientation(self, value):
-        if not isinstance(value, Orientation):
-            raise TypeError("""Invalid parameter. Orientation must be an 
-                            an instance of the Orientation class""")
+        validate_instance(value, Orientation)
         self._orientation = value
     
     @property
@@ -35,9 +32,7 @@ class Panel:
 
     @location.setter
     def location(self, value):
-        if not isinstance(value, Location):
-            raise TypeError("""Invalid parameter. Location must be an 
-                            an instance of the Location class""")
+        validate_instance(value, Location)
         self._location = value
     
     @property
@@ -48,9 +43,7 @@ class Panel:
     def edges(self, value):
         from .edge import Edge
         # Parameter handling and assignment
-        if not isinstance(value, list): 
-            raise TypeError("""Invalid parameter. Edges must be an 
-                            a List of Edge instances.""")
+        validate_instance(value, list)
         for index, edge in enumerate(value): 
             if not isinstance(edge, Edge):
                 raise TypeError(f"""The edge[{index}] parameter is not an Edge 

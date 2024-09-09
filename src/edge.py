@@ -1,10 +1,9 @@
 from .panel import Panel
+from src.utility import validate_instance
 
 class Edge:
     def __init__(self, panel):
-        if not isinstance(panel, Panel):
-            raise TypeError("""Invalid parameter. Panel must be an 
-                            an instance of the Panel class""")
+        validate_instance(panel, Panel)
         self._panel = panel
         self._connector_nodes = []
         self._corner_nodes = []
@@ -16,9 +15,7 @@ class Edge:
     
     @panel.setter
     def panel(self, value):
-        if not isinstance(value, Panel):
-            raise TypeError("""Invalid parameter. Panel must be an 
-                            an instance of the Panel class""")
+        validate_instance(value, Panel)
         self._panel = value
     
     @property
@@ -28,9 +25,7 @@ class Edge:
     @connector_nodes.setter
     def connector_nodes(self, value):
         from .node import ConnectorNode
-        if not isinstance(value, list):
-            raise TypeError("""Invalid parameter. Parameter must be a list of 
-                            ConnectorNode instances.""")
+        validate_instance(value, list)
         for index, connector_node in enumerate(value):
             if not isinstance(connector_node, ConnectorNode): 
                 param_type = type(connector_node)
@@ -46,9 +41,7 @@ class Edge:
     @corner_nodes.setter
     def corner_nodes(self, value):
         from .node import CornerNode
-        if not isinstance(value, list):
-            raise TypeError("""Invalid parameter. Parameter must be a list of 
-                            CornerNode instances.""")
+        validate_instance(value, list)
         for index, corner_node in enumerate(value):
             if not isinstance(corner_node, CornerNode): 
                 param_type = type(corner_node)
