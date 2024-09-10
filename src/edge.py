@@ -1,5 +1,5 @@
 from .panel import Panel
-from src.utility import validate_instance
+from .utility import validate_instance, is_on
 
 class Edge:
     def __init__(self, panel):
@@ -8,20 +8,23 @@ class Edge:
         self._connector_nodes = []
         self._corner_nodes = []
 
+#    def __str__(self):
+#        return f"""Edge object. Belongs to panel: ({self._panel}). _connector_nodes: ({self._connector_nodes}). _corner_nodes: ({self._corner_nodes})"""
+
     # Defining getter and setter methods
     @property
     def panel(self):
         return self._panel
-    
+
     @panel.setter
     def panel(self, value):
         validate_instance(value, Panel)
         self._panel = value
-    
+
     @property
     def connector_nodes(self):
         return self._connector_nodes
-    
+
     @connector_nodes.setter
     def connector_nodes(self, value):
         from .node import ConnectorNode
@@ -74,3 +77,59 @@ class Edge:
                                     ConnectorNode instances. param[{index}] is 
                                     a {param_type} not a ConnectorNode.""")
                 self._connector_nodes.append(connector_node)
+
+    def is_complete(self):
+        from .node import Node
+
+        # Needs to belong to a panel
+        if not isinstance(self._panel, Panel):
+            return False
+
+        # All nodes need to be complete
+        for node in self._corner_nodes:
+            if not node.is_complete():
+                return False
+        for node in self._connector_nodes:
+            if not node.is_complete():
+                return False
+
+        # Needs to have two and only two CornerNodes
+        if len(self._corner_nodes) != 2:
+            return False
+
+        # These CornerNodes need to have different locations
+        if self._corner_nodes[0].location == self._corner_nodes[1].location:
+            return False
+
+        # Needs to have at least one ConnectorNode
+        if not self._connector_nodes:
+            return False
+
+        # All nodes that point to this edge instance need to be either in 
+        # _corner_nodes or _connector_nodes
+        for node in Node.instances():
+            if node.edge == self:
+                if (node not in self._corner_nodes
+                    and node not in self._connector_nodes):
+                    return False
+
+        # All nodes in _corner_nodes and _connector_nodes need to point to this
+        # edge instance. And all nodes need to be complete.
+        for node in self._corner_nodes:
+            if not node.is_complete:
+                return False
+            if node.edge != self:
+                return False
+        for node in self._connector_nodes:
+            if not node.is_complete:
+                return False
+            if node.edge != self:
+                return False
+
+        # The location of all nodes in _connector_nodes need to lie on the 
+        # geometric line between the two nodes in _corner_nodes
+        for node in self._connector_nodes:
+            if not is_on(node, self):
+                return False
+
+        return True

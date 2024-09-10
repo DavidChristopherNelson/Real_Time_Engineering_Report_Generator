@@ -2,15 +2,22 @@ from .edge import Edge
 from .location import Location
 from .utility import validate_instance
 
-class Node: 
+class Node:
+    _instances = []
+
+    @classmethod
+    def instances(cls):
+        return cls._instances
+
     def __init__(self, edge, location = None):
         validate_instance(edge, Edge)
-        if location is None: 
+        if location is None:
             location = Location(None, None, None)
         validate_instance(location, Location)
         self._edge = edge
         self._location = location
         self._mate = None
+        Node._instances.append(self)
     
     @property
     def edge(self):
@@ -35,8 +42,14 @@ class Node:
         return self._mate
 
 class ConnectorNode(Node):
-    def __init__(self, edge): 
-        super().__init__(edge)
+    def __init__(self, edge, location = None): 
+        super().__init__(edge, location)
+
+    def __str__(self):
+        return f"""Connector Node Object:
+        Belongs to edge: {self._edge}.
+        _location: {self._location}.
+        _mate: {self._mate}"""
 
     def mate_with(self, mate):
         # Only mate with CornerNode instances or None
@@ -48,7 +61,7 @@ class ConnectorNode(Node):
         if mate is not None and self._edge == mate.edge:
             raise ValueError("Nodes have to be on different edges to mate.")
         self._mate = mate
-        
+
         if mate is None or mate.mate == self:
             return
         elif mate.mate is None: 
@@ -65,17 +78,20 @@ class ConnectorNode(Node):
         # Needs to have a non-None Location
         if self._location == Location(None, None, None):
             return False
-        # That mate cannot be itself. 
+        # It cannot mate with itself. 
         if self == self.mate:
             return False
-        # That mate cannot have the same edge as self. 
+        # It's mate cannot have the same edge as self. 
         if self.mate is not None and self.edge == self.mate.edge:
             return False
         return True
 
 class CornerNode(Node):
-    def __init__(self, edge): 
-        super().__init__(edge)
+    def __init__(self, edge, location = None): 
+        super().__init__(edge, location)
+
+#    def __str__(self):
+#        return f"""Corner Node Object: Belongs to edge: ({self._edge}). _location: ({self._location}). _mate: ({self._mate})"""
 
     def mate_with(self, mate):
         # Only mate with CornerNode instances or None

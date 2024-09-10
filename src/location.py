@@ -18,6 +18,9 @@ class Location:
         self._y = y
         self._z = z
 
+    def __str__(self):
+        return f"Location Object: x = {self.x}, y = {self.y}, z = {self.z}"
+
     # Defining getter and setter methods
     @property
     def x(self):
@@ -43,6 +46,7 @@ class Location:
     def z(self, value):
         self._z = value
 
+    # Untested ?????
     def __eq__(self, other):
         if not isinstance(other, Location):
             return False
