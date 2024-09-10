@@ -54,6 +54,40 @@ def test_connector_nodes_mate_with_method():
     with pytest.raises(ValueError):
         connector_node.mate_with(connector_node_4)
 
+def test_connector_node_is_complete_method():
+    edge = Edge(Panel(Orientation.FLOOR))
+    connector_node = ConnectorNode(edge)
+    connector_node_3 = ConnectorNode(edge)
+    location = Location(1, 2, 3)
+    edge_2 = Edge(Panel(Orientation.WALL))
+    connector_node_2 = ConnectorNode(edge_2)
+    edge = Edge(Panel(Orientation.FLOOR))
+
+    # Has edge but no location or mate (fails)
+    assert connector_node.is_complete() == False
+
+    # Has edge and location but no mate (passes)
+    connector_node.location = location
+    assert connector_node.is_complete() == True
+
+    # Has edge and location and a legitimate mate (passes)
+    connector_node.mate_with(connector_node_2)
+    assert connector_node.is_complete() == True
+
+    # Has edge and location but mate is illegitimate (shares same edge) (fails)
+    with pytest.raises(ValueError):
+        connector_node.mate_with(connector_node_3)
+
+    # Has edge and location but mate is illegitimate (mates with itself)(fails)
+    with pytest.raises(ValueError):
+        connector_node.mate_with(connector_node)
+    
+    # Has edge and a legitimate mate but no location.
+    connector_node_4 = ConnectorNode(edge_2)
+    connector_node_4.mate_with(connector_node)
+    print("starting failed assertion")
+    assert connector_node_4.is_complete() == False
+
 ###############################################################################
 # CornerNode Tests
 ###############################################################################

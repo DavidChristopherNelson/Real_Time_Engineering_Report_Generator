@@ -39,14 +39,17 @@ class ConnectorNode(Node):
         super().__init__(edge)
 
     def mate_with(self, mate):
-        # Only mate with ConnectorNode instances
-        validate_instance(mate, ConnectorNode)
+        # Only mate with CornerNode instances or None
+        if mate is not None and not isinstance(mate, ConnectorNode):
+            raise TypeError(f"""Invalid parameter. {mate} must be an instance 
+                            of ConnectorNode or None.""")
         if self == mate:
             raise ValueError("A ConnectorNode instance cannot mate with itself.")
-        if self._edge == mate.edge:
+        if mate is not None and self._edge == mate.edge:
             raise ValueError("Nodes have to be on different edges to mate.")
         self._mate = mate
-        if mate.mate == self:
+        
+        if mate is None or mate.mate == self:
             return
         elif mate.mate is None: 
             mate.mate_with(self)
@@ -62,25 +65,21 @@ class ConnectorNode(Node):
         # Needs to have a non-None Location
         if self._location == Location(None, None, None):
             return False
-        # Needs to have a mate. 
-        if not isinstance(self._mate, ConnectorNode):
-            return False
         # That mate cannot be itself. 
         if self == self.mate:
             return False
         # That mate cannot have the same edge as self. 
-        if self.edge == self.mate.edge:
+        if self.mate is not None and self.edge == self.mate.edge:
             return False
-        else:
-            return True
+        return True
 
 class CornerNode(Node):
     def __init__(self, edge): 
         super().__init__(edge)
 
     def mate_with(self, mate):
-        # Only mate with CornerNode instances
-        if mate is not None and not isinstance(mate, CornerNode) :
+        # Only mate with CornerNode instances or None
+        if mate is not None and not isinstance(mate, CornerNode):
             raise TypeError(f"""Invalid parameter. {mate} must be an instance 
                             of CornerNode or None.""")
         if self == mate:
@@ -107,7 +106,7 @@ class CornerNode(Node):
         # Needs to have a non-None Location
         if self._location == Location(None, None, None):
             return False
-        # Needs to have a mate. 
+        # Needs to have a mate.
         if not isinstance(self._mate, CornerNode):
             return False
         # That mate cannot be itself. 
@@ -116,5 +115,4 @@ class CornerNode(Node):
         # That mate cannot have the same edge as self. 
         if self.edge == self.mate.edge:
             return False
-        else:
-            return True
+        return True
