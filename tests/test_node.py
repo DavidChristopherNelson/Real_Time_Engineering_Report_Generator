@@ -42,6 +42,7 @@ def test_connector_nodes_mate_with_method():
     edge_3 = Edge(Panel(Orientation.ROOF))
     connector_node_3 = ConnectorNode(edge_3)
     connector_node_4 = ConnectorNode(edge)
+    corner_node = CornerNode(edge_2)
     assert connector_node.mate == None
     assert connector_node_2.mate == None
 
@@ -53,6 +54,24 @@ def test_connector_nodes_mate_with_method():
     # Nodes must be on different edges to mate.
     with pytest.raises(ValueError):
         connector_node.mate_with(connector_node_4)
+
+    # ConnectorNodes cannot mate with CornerNodes
+    with pytest.raises(TypeError):
+        connector_node.mate_with(corner_node)
+
+    # ConnectorNode can mate with None
+    connector_node.mate_with(connector_node_3)
+    assert connector_node.mate == connector_node_3
+    connector_node.mate_with(None)
+    assert connector_node.mate == None
+
+    # Node cannot mate with itself
+    with pytest.raises(ValueError):
+        connector_node.mate_with(connector_node)
+
+    # Must validate parameters
+    with pytest.raises(TypeError):
+        connector_node.mate_with("connector_node")
 
 def test_connector_node_is_complete_method():
     edge = Edge(Panel(Orientation.FLOOR))
@@ -109,6 +128,7 @@ def test_corner_nodes_mate_with_method():
     edge_3 = Edge(Panel(Orientation.ROOF))
     corner_node_3 = CornerNode(edge_3)
     corner_node_4 = CornerNode(edge)
+    connector_node = ConnectorNode(edge_3)
     assert corner_node.mate == None
     assert corner_node_2.mate == None
 
@@ -120,6 +140,24 @@ def test_corner_nodes_mate_with_method():
     # Nodes must be on different edges to mate.
     with pytest.raises(ValueError):
         corner_node.mate_with(corner_node_4)
+
+    # CornerNodes cannot mate with ConnectorNodes
+    with pytest.raises(TypeError):
+        corner_node.mate_with(connector_node)
+
+    # CornerNode can mate with None
+    corner_node.mate_with(corner_node_3)
+    assert corner_node.mate == corner_node_3
+    corner_node.mate_with(None)
+    assert corner_node.mate == None
+
+    # A Node cannot mate with itself
+    with pytest.raises(ValueError):
+        corner_node.mate_with(corner_node)
+
+    # Must validate parameters
+    with pytest.raises(TypeError):
+        corner_node.mate_with("corner_node")
 
 def test_corner_node_is_complete_method():
     edge = Edge(Panel(Orientation.FLOOR))
