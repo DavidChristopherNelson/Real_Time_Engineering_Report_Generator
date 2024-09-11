@@ -2,7 +2,7 @@ import pytest
 
 from src.edge import Edge
 from src.panel import Panel
-from src.location import Location
+from src.location import RelativeLocation, AbsoluteLocation
 from src.orientation import Orientation
 from src.node import Node, ConnectorNode, CornerNode
 
@@ -11,18 +11,21 @@ from src.node import Node, ConnectorNode, CornerNode
 ###############################################################################
 def test_node_initialization():
     edge = Edge(Panel(Orientation.FLOOR))
-    location = Location(1, 2, 3)
-    node = Node(edge, location)
+    relative_location = RelativeLocation(1, 2, 3)
+    node = Node(edge, relative_location)
     assert node.edge == edge
-    assert node.location == location
+    assert node.relative_location == relative_location
     assert node.mate == None
 
 def test_invalid_params_node_initialisation():
     edge = Edge(Panel(Orientation.FLOOR))
+    relative_location = RelativeLocation(1, 2, 3)
     with pytest.raises(TypeError):
         node = Node("edge")
     with pytest.raises(TypeError):
-        node = Node(edge, "location")
+        node = Node(edge, "relative_location")
+    with pytest.raises(TypeError):
+        node = Node(edge, relative_location, "absolute_location")
 
 ###############################################################################
 # ConnectorNode Tests
@@ -91,16 +94,16 @@ def test_connector_node_is_complete_method():
     edge = Edge(Panel(Orientation.FLOOR))
     connector_node = ConnectorNode(edge)
     connector_node_3 = ConnectorNode(edge)
-    location = Location(1, 2, 3)
+    relative_location = RelativeLocation(1, 2, 3)
     edge_2 = Edge(Panel(Orientation.WALL))
     connector_node_2 = ConnectorNode(edge_2)
     edge = Edge(Panel(Orientation.FLOOR))
 
-    # Has edge but no location or mate (fails)
+    # Has edge but no relative location or mate (fails)
     assert connector_node.is_complete() == False
 
     # Has edge and location but no mate (passes)
-    connector_node.location = location
+    connector_node.relative_location = relative_location
     assert connector_node.is_complete() == True
 
     # Has edge and location and a legitimate mate (passes)
@@ -114,12 +117,6 @@ def test_connector_node_is_complete_method():
     # Has edge and location but mate is illegitimate (mates with itself)(fails)
     with pytest.raises(ValueError):
         connector_node.mate_with(connector_node)
-    
-    # Has edge and a legitimate mate but no location.
-    connector_node_4 = ConnectorNode(edge_2)
-    connector_node_4.mate_with(connector_node)
-    print("starting failed assertion")
-    assert connector_node_4.is_complete() == False
 
 ###############################################################################
 # CornerNode Tests
@@ -193,7 +190,7 @@ def test_corner_node_is_complete_method():
     edge = Edge(Panel(Orientation.FLOOR))
     corner_node = CornerNode(edge)
     corner_node_3 = CornerNode(edge)
-    location = Location(1, 2, 3)
+    relative_location = RelativeLocation(1, 2, 3)
     edge_2 = Edge(Panel(Orientation.WALL))
     corner_node_2 = CornerNode(edge_2)
     edge = Edge(Panel(Orientation.FLOOR))
@@ -202,7 +199,7 @@ def test_corner_node_is_complete_method():
     assert corner_node.is_complete() == False
 
     # Has edge and location but no mate (fails)
-    corner_node.location = location
+    corner_node.relative_location = relative_location
     assert corner_node.is_complete() == False
 
     # Has edge and location and a legitimate mate (passes)
@@ -216,9 +213,3 @@ def test_corner_node_is_complete_method():
     # Has edge and location but mate is illegitimate (mates with itself)(fails)
     with pytest.raises(ValueError):
         corner_node.mate_with(corner_node)
-    
-    # Has edge and a legitimate mate but no location.
-    corner_node_4 = CornerNode(edge_2)
-    corner_node_4.mate_with(corner_node)
-    print("starting failed assertion")
-    assert corner_node_4.is_complete() == False

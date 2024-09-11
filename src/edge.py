@@ -102,7 +102,8 @@ class Edge:
             return False
 
         # These CornerNodes need to have different locations
-        if self._corner_nodes[0].location == self._corner_nodes[1].location:
+        if (self._corner_nodes[0].relative_location 
+            == self._corner_nodes[1].relative_location):
             return False
 
         # Needs to have at least one ConnectorNode

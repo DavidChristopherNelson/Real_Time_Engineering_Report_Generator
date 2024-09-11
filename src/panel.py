@@ -1,22 +1,22 @@
 from .orientation import Orientation
-from .location import Location
+from .location import AbsoluteLocation
 from .utility import validate_instance, is_perpendicular
 
 class Panel:
-    def __init__(self, _orientation, _location = None):
+    def __init__(self, _orientation, _absolute_location = None):
         # Parameter handling and assignment
         validate_instance(_orientation, Orientation)
-        if _location is None:
-            _location = Location(None, None, None)
-        elif not isinstance(_location, Location):
-            raise TypeError("""Invalid parameter. Location must be an 
-                            an instance of the Location class""")
+        if _absolute_location is None:
+            _absolute_location = AbsoluteLocation(None, None, None)
+        elif not isinstance(_absolute_location, AbsoluteLocation):
+            raise TypeError("""Invalid parameter. Absolute Location must be an 
+                            an instance of the Absolute Location class""")
         self._orientation = _orientation
-        self._location = _location
+        self._absolute_location = _absolute_location
         self._edges = []
 
 #    def __str__(self):
-#        return f"""Panel object. _orientation: ({self._orientation}). _location: ({self._location}). _edges: ({self._edges}). """
+#        return f"""Panel object. _orientation: ({self._orientation}). _absolute_location: ({self._absolute_location}). _edges: ({self._edges}). """
 
     # Defining getter and setter methods
     @property
@@ -29,13 +29,13 @@ class Panel:
         self._orientation = value
     
     @property
-    def location(self):
-        return self._location
+    def absolute_location(self):
+        return self._absolute_location
 
-    @location.setter
-    def location(self, value):
-        validate_instance(value, Location)
-        self._location = value
+    @absolute_location.setter
+    def absolute_location(self, value):
+        validate_instance(value, AbsoluteLocation)
+        self._absolute_location = value
     
     @property
     def edges(self):
@@ -52,15 +52,15 @@ class Panel:
                                 instance.""")
         self._edges = value
     
-    # Untested!!!!
     def is_complete(self):
         # Needs to have an orientation
         #print("Needs to have an orientation")
         if not isinstance(self._orientation, Orientation):
             return False
-        # Needs to have a location
-        #print("Needs to have a location")
-        if not isinstance(self._location, Location):
+        # Needs to have an absolute location. Although it can be a None
+        # location.
+        #print("Needs to have an absolute location")
+        if not isinstance(self._absolute_location, AbsoluteLocation):
             return False
         # Needs to have exactly four edges
         #print("Needs to have exactly four edges")

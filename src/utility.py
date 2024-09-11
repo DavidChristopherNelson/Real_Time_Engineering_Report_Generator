@@ -25,8 +25,8 @@ def is_perpendicular(edge_1, edge_2):
 def find_parallel_axis(edge):
     from .edge import Edge
     validate_instance(edge, Edge)
-    corner_1_location = edge.corner_nodes[0].location
-    corner_2_location = edge.corner_nodes[1].location
+    corner_1_location = edge.corner_nodes[0].relative_location
+    corner_2_location = edge.corner_nodes[1].relative_location
 
     delta_x = corner_2_location.x - corner_1_location.x
     delta_y = corner_2_location.y - corner_1_location.y
@@ -50,7 +50,10 @@ def is_on(point, edge):
     from .node import Node
     validate_instance(point, Node)
     validate_instance(edge, Edge)
-    if None == point.location.x == point.location.y == point.location.z:
+    if (None 
+        == point.relative_location.x 
+        == point.relative_location.y 
+        == point.relative_location.z):
         raise ValueError("""Invalid first parameter. The node needs to have a 
                          location.""")
     if len(edge.corner_nodes) < 2:
@@ -59,26 +62,39 @@ def is_on(point, edge):
     if edge.corner_nodes[0] == edge.corner_nodes[1]:
         raise ValueError("""Invalid second parameter. The edge needs two corner
                          nodes that are different.""")
-    if ((None == edge.corner_nodes[0].location.x 
-        == edge.corner_nodes[0].location.y 
-        == edge.corner_nodes[0].location.z)
+    if ((None == edge.corner_nodes[0].relative_location.x 
+        == edge.corner_nodes[0].relative_location.y 
+        == edge.corner_nodes[0].relative_location.z)
         or 
-        (None == edge.corner_nodes[1].location.x 
-        == edge.corner_nodes[1].location.y 
-        == edge.corner_nodes[1].location.z)):
+        (None == edge.corner_nodes[1].relative_location.x 
+        == edge.corner_nodes[1].relative_location.y 
+        == edge.corner_nodes[1].relative_location.z)):
         raise ValueError("""Invalid second parameter. The edge needs corner
                          nodes that have non-None locations.""")
-    corner_1_location = edge.corner_nodes[0].location
-    corner_2_location = edge.corner_nodes[1].location
+    corner_1_location = edge.corner_nodes[0].relative_location
+    corner_2_location = edge.corner_nodes[1].relative_location
     axis = find_parallel_axis(edge)
+    # Refactor Alert: I should refactor this mess
     if axis == Axis.X:
-        return ((corner_1_location.x < point.location.x < corner_2_location.x)
-            or (corner_2_location.x < point.location.x < corner_1_location.x))
+        return ((corner_1_location.x 
+                 < point.relative_location.x 
+                 < corner_2_location.x)
+            or (corner_2_location.x 
+                < point.relative_location.x 
+                < corner_1_location.x))
     elif axis == Axis.Y:
-        return (corner_1_location.y < point.location.y < corner_2_location.y
-            or corner_2_location.y < point.location.y < corner_1_location.y)
+        return ((corner_1_location.y 
+                < point.relative_location.y 
+                < corner_2_location.y)
+                or (corner_2_location.y 
+                < point.relative_location.y 
+                < corner_1_location.y))
     elif axis == Axis.Z:
-        return (corner_1_location.z < point.location.z < corner_2_location.z
-            or corner_2_location.z < point.location.z < corner_1_location.z)
+        return ((corner_1_location.z 
+                    < point.relative_location.z 
+                    < corner_2_location.z)
+                or (corner_2_location.z 
+                    < point.relative_location.z 
+                    < corner_1_location.z))
     else:
         raise ValueError("Unexpected value for axis.")
