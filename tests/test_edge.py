@@ -59,18 +59,24 @@ def test_edge_add_connector_nodes():
     panel = Panel(Orientation.FLOOR)
     edge = Edge(panel)
     connector_node = ConnectorNode(edge)
+    # I am breaking encapsulation to test add_connector_nodes which occurs
+    # automatically upon ConnectorNode creation.
+    edge._connector_nodes = []
+    assert edge.connector_nodes == []
     edge.add_connector_nodes([connector_node])
     assert edge.connector_nodes == [connector_node]
     connector_node_2 = ConnectorNode(edge)
     connector_node_3 = ConnectorNode(edge)
-    edge.add_connector_nodes([connector_node_2, connector_node_3])
-    assert edge.connector_nodes == [connector_node, 
-                                    connector_node_2, 
-                                    connector_node_3]
     connector_node_4 = ConnectorNode(edge)
+    # I am breaking encapsulation to test add_connector_nodes which occurs
+    # automatically upon ConnectorNode creation.
+    edge._connector_nodes = []
+    assert edge.connector_nodes == []
+    edge.add_connector_nodes([connector_node_2, connector_node_3])
+    assert edge.connector_nodes == [connector_node_2,
+                                    connector_node_3]
     edge.add_connector_nodes(connector_node_4)
-    assert edge.connector_nodes == [connector_node, 
-                                    connector_node_2, 
+    assert edge.connector_nodes == [connector_node_2,
                                     connector_node_3,
                                     connector_node_4]
 
@@ -96,10 +102,10 @@ def test_edge_corner_nodes_getter_and_setter():
 def test_edge_corner_nodes_setter_with_invalid_parameters():
     panel = Panel(Orientation.FLOOR)
     edge = Edge(panel)
+    edge_2 = Edge(panel)
     corner_node_string = "CornerNode"
     corner_node = CornerNode(edge)
     corner_node_2 = CornerNode(edge)
-    corner_node_3 = CornerNode(edge)
     with pytest.raises(TypeError):
         edge.corner_nodes = corner_node_string
     with pytest.raises(TypeError):
@@ -111,7 +117,12 @@ def test_edge_corner_nodes_setter_with_invalid_parameters():
         edge.corner_nodes = [corner_node, corner_node]
     # An edge cannot have three or more corner nodes
     with pytest.raises(ValueError):
-        edge.corner_nodes = [corner_node, corner_node_2, corner_node_3]
+        edge.corner_nodes = [corner_node, corner_node_2, corner_node]
+    with pytest.raises(OverflowError):
+        corner_node_3 = CornerNode(edge)
+    with pytest.raises(OverflowError):
+        corner_node_3 = CornerNode(edge_2)
+        corner_node_3.edge = edge
 
 # is_complete Method
 def test_edge_is_complete():

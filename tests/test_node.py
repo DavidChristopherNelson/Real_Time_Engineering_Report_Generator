@@ -18,8 +18,11 @@ def test_node_initialization():
     assert node.mate == None
 
 def test_invalid_params_node_initialisation():
+    edge = Edge(Panel(Orientation.FLOOR))
     with pytest.raises(TypeError):
         node = Node("edge")
+    with pytest.raises(TypeError):
+        node = Node(edge, "location")
 
 ###############################################################################
 # ConnectorNode Tests
@@ -29,10 +32,21 @@ def test_connector_node_initialization():
     connector_node = ConnectorNode(edge)
     assert connector_node.edge == edge
     assert connector_node.mate == None
+    assert edge.connector_nodes == [connector_node]
+    connector_node_2 = ConnectorNode(edge)
+    assert edge.connector_nodes == [connector_node, connector_node_2]
 
-def test_invalid_params_connector_node_initialisation():
-    with pytest.raises(TypeError):
-        connector_node = ConnectorNode("edge")
+def test_corner_node_edge_setter():
+    edge = Edge(Panel(Orientation.FLOOR))
+    connector_node = ConnectorNode(edge)
+    connector_node_2 = ConnectorNode(edge)
+    edge_2 = Edge(Panel(Orientation.WALL))
+    connector_node_3 = ConnectorNode(edge_2)
+    assert edge.connector_nodes == [connector_node, connector_node_2]
+    assert edge_2.connector_nodes == [connector_node_3]
+    connector_node_2.edge = edge_2
+    assert edge.connector_nodes == [connector_node]
+    assert edge_2.connector_nodes == [connector_node_3, connector_node_2]
 
 def test_connector_nodes_mate_with_method():
     edge = Edge(Panel(Orientation.FLOOR))
@@ -112,13 +126,29 @@ def test_connector_node_is_complete_method():
 ###############################################################################
 def test_corner_node_initialization():
     edge = Edge(Panel(Orientation.FLOOR))
+    assert edge.corner_nodes == []
     corner_node = CornerNode(edge)
+    assert edge.corner_nodes == [corner_node]
     assert corner_node.edge == edge
     assert corner_node.mate == None
+    corner_node_2 = CornerNode(edge)
+    assert edge.corner_nodes == [corner_node, corner_node_2]
+    with pytest.raises(OverflowError):
+        corner_node_3 = CornerNode(edge)
 
-def test_invalid_params_corner_node_initialisation():
-    with pytest.raises(TypeError):
-        corner_node = CornerNode("edge")
+def test_corner_node_edge_setter():
+    edge = Edge(Panel(Orientation.FLOOR))
+    corner_node = CornerNode(edge)
+    corner_node_2 = CornerNode(edge)
+    edge_2 = Edge(Panel(Orientation.WALL))
+    corner_node_3 = CornerNode(edge_2)
+    with pytest.raises(OverflowError):
+        corner_node_3.edge = edge
+    assert edge.corner_nodes == [corner_node, corner_node_2]
+    assert edge_2.corner_nodes == [corner_node_3]
+    corner_node_2.edge = edge_2
+    assert edge.corner_nodes == [corner_node]
+    assert edge_2.corner_nodes == [corner_node_3, corner_node_2]
 
 def test_corner_nodes_mate_with_method():
     edge = Edge(Panel(Orientation.FLOOR))

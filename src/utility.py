@@ -22,7 +22,6 @@ def is_perpendicular(edge_1, edge_2):
                         complete.""")
     return find_parallel_axis(edge_1) != find_parallel_axis(edge_2)
 
-# Untested!!!!!!!
 def find_parallel_axis(edge):
     from .edge import Edge
     validate_instance(edge, Edge)

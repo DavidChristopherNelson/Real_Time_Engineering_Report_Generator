@@ -18,14 +18,24 @@ class Node:
         self._location = location
         self._mate = None
         Node._instances.append(self)
-    
+
     @property
     def edge(self):
         return self._edge
-    
+
     @edge.setter
     def edge(self, value):
         validate_instance(value, Edge)
+        if type(self) == CornerNode:
+            if len(value.corner_nodes) == 2:
+                raise OverflowError(f"Cannot add node: {self} to edge: {value} "
+                                    f"because this edge already has two corner "
+                                    f"nodes.")
+            self.edge.corner_nodes.remove(self)
+            value.corner_nodes.append(self)
+        elif type(self) == ConnectorNode:
+            self.edge.connector_nodes.remove(self)
+            value.connector_nodes.append(self)
         self._edge = value
 
     @property
@@ -34,7 +44,9 @@ class Node:
     
     @location.setter
     def location(self, value):
-        validate_instance(value, Location)
+        if value is not None and not isinstance(value, Location):
+            raise TypeError(f"""Invalid parameter. {value} must be an instance of 
+                            Location""")
         self._location = value
     
     @property
@@ -44,12 +56,13 @@ class Node:
 class ConnectorNode(Node):
     def __init__(self, edge, location = None): 
         super().__init__(edge, location)
+        edge.connector_nodes.append(self)
 
-    def __str__(self):
-        return f"""Connector Node Object:
-        Belongs to edge: {self._edge}.
-        _location: {self._location}.
-        _mate: {self._mate}"""
+#    def __str__(self):
+#        return f"""Connector Node Object:
+#        Belongs to edge: {self._edge}.
+#        _location: {self._location}.
+#        _mate: {self._mate}"""
 
     def mate_with(self, mate):
         # Only mate with CornerNode instances or None
@@ -87,8 +100,13 @@ class ConnectorNode(Node):
         return True
 
 class CornerNode(Node):
-    def __init__(self, edge, location = None): 
+    def __init__(self, edge, location = None):
+        if len(edge.corner_nodes) == 2:
+            raise OverflowError(f"Cannot add node: {self} to edge: {edge} "
+                                f"because this edge already has two corner "
+                                f"nodes.")
         super().__init__(edge, location)
+        edge.corner_nodes.append(self)
 
 #    def __str__(self):
 #        return f"""Corner Node Object: Belongs to edge: ({self._edge}). _location: ({self._location}). _mate: ({self._mate})"""
@@ -96,12 +114,12 @@ class CornerNode(Node):
     def mate_with(self, mate):
         # Only mate with CornerNode instances or None
         if mate is not None and not isinstance(mate, CornerNode):
-            raise TypeError(f"""Invalid parameter. {mate} must be an instance 
+            raise TypeError(f"""Invalid parameter. {mate} must be an instance
                             of CornerNode or None.""")
         if self == mate:
             raise ValueError("A CornerNode instance cannot mate with itself.")
         if mate is not None and self._edge == mate.edge:
-            raise ValueError("""A CornerNode instance cannot mate with another 
+            raise ValueError("""A CornerNode instance cannot mate with another
                              CornerNode instance on the same edge.""")
         self._mate = mate
 

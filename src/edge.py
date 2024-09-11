@@ -60,6 +60,7 @@ class Edge:
         self._corner_nodes = value
 
     # Define other methods
+    # This method should only get called on connector node creation.
     def add_connector_nodes(self, value):
         from .node import ConnectorNode
         if (not isinstance(value, list) and 

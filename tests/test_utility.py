@@ -159,7 +159,6 @@ def test_find_parallel_axis():
 def test_is_on():
     panel = Panel(Orientation.FLOOR)
     edge = Edge(panel)
-    node = Node(edge)
     origin = Location(0,0,0)
     unit_vector_x = Location(1,0,0)
     unit_vector_y = Location(0,1,0)
@@ -167,73 +166,60 @@ def test_is_on():
     vector_x = Location(2,0,0)
     vector_y = Location(0,2,0)
     vector_z = Location(0,0,2)
-    corner_no_location = CornerNode(edge)
+    connector_node = ConnectorNode(edge)
     corner_origin = CornerNode(edge, origin)
-    corner_x = CornerNode(edge, vector_x)
-    corner_y = CornerNode(edge, vector_y)
-    corner_z = CornerNode(edge, vector_z)
-    connector_x = ConnectorNode(edge, unit_vector_x)
-    connector_y = ConnectorNode(edge, unit_vector_y)
-    connector_z = ConnectorNode(edge, unit_vector_z)
+
 
     # First parameter needs to be a Node instance
     with pytest.raises(TypeError):
-        is_on(panel, vector_x)
+        is_on(panel, edge)
 
     # Second parameter needs to be a Edge instance
     with pytest.raises(TypeError):
-        is_on(node, vector_x)
+        is_on(connector_node, vector_x)
+
+    # Edge needs two corner nodes
+    with pytest.raises(ValueError):
+        is_on(connector_node, edge)
+    corner_node = CornerNode(edge)
+
+    # Edge needs two corner nodes with locations
+    corner_node.location = None
+    with pytest.raises(ValueError):
+        is_on(connector_node, edge)
 
     # Node needs to have a location
-    edge.corner_nodes = [corner_origin, corner_x]
     with pytest.raises(ValueError):
-        is_on(node, edge)
+        is_on(connector_node, edge)
 
-    # Edge needs two corner nodes with locations
-    node.location = unit_vector_x
-    edge.corner_nodes = []
-    with pytest.raises(ValueError):
-        is_on(node, edge)
+    origin = Location(0,0,0)
+    unit_vector_x = Location(1,0,0)
+    unit_vector_y = Location(0,1,0)
+    unit_vector_z = Location(0,0,1)
+    vector_x = Location(2,0,0)
+    vector_y = Location(0,2,0)
+    vector_z = Location(0,0,2)
 
-    # Edge needs two corner nodes with locations
-    edge.corner_nodes = [corner_origin]
-    with pytest.raises(ValueError):
-        is_on(node, edge)
+    corner_node.location = vector_x
+    connector_node.location = unit_vector_x
+    assert is_on(connector_node, edge)
 
-    # Edge needs two different corner nodes
-    with pytest.raises(ValueError):
-        edge.corner_nodes = [corner_origin, corner_origin]
+    corner_node.location = vector_y
+    connector_node.location = unit_vector_y
+    assert is_on(connector_node, edge)
 
-    # Edge needs two corner nodes with locations
-    node.location = unit_vector_x
-    edge.corner_nodes = [corner_no_location, corner_origin]
-    with pytest.raises(ValueError):
-        is_on(node, edge)
+    corner_node.location = vector_z
+    connector_node.location = unit_vector_z
+    assert is_on(connector_node, edge)
 
-    # Edge needs two corner nodes with locations
-    node.location = unit_vector_x
-    edge.corner_nodes = [corner_origin, corner_no_location]
-    with pytest.raises(ValueError):
-        is_on(node, edge)
+    corner_node.location = vector_y
+    connector_node.location = unit_vector_x
+    assert not is_on(connector_node, edge)
 
-    edge.corner_nodes = [corner_origin, corner_x]
-    assert is_on(connector_x, edge)
-    edge.corner_nodes = [corner_x, corner_origin]
-    assert is_on(connector_x, edge)
+    corner_node.location = vector_z
+    connector_node.location = unit_vector_y
+    assert not is_on(connector_node, edge)
 
-    edge.corner_nodes = [corner_origin, corner_y]
-    assert is_on(connector_y, edge)
-    edge.corner_nodes = [corner_y, corner_origin]
-    assert is_on(connector_y, edge)
-
-    edge.corner_nodes = [corner_origin, corner_z]
-    assert is_on(connector_z, edge)
-    edge.corner_nodes = [corner_z, corner_origin]
-    assert is_on(connector_z, edge)
-
-    edge.corner_nodes = [corner_origin, corner_y]
-    assert not is_on(connector_x, edge)
-    edge.corner_nodes = [corner_origin, corner_z]
-    assert not is_on(connector_y, edge)
-    edge.corner_nodes = [corner_origin, corner_x]
-    assert not is_on(connector_z, edge)
+    corner_node.location = vector_x
+    connector_node.location = unit_vector_z
+    assert not is_on(connector_node, edge)
