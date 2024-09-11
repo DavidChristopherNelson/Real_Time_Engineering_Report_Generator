@@ -7,6 +7,7 @@ class Edge:
         self._panel = panel
         self._connector_nodes = []
         self._corner_nodes = []
+        panel.edges.append(self)
 
 #    def __str__(self):
 #        return f"""Edge object. Belongs to panel: ({self._panel}). _connector_nodes: ({self._connector_nodes}). _corner_nodes: ({self._corner_nodes})"""
@@ -19,6 +20,8 @@ class Edge:
     @panel.setter
     def panel(self, value):
         validate_instance(value, Panel)
+        self._panel.edges.remove(self)
+        value.edges.append(self)
         self._panel = value
 
     @property

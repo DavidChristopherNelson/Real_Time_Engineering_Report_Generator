@@ -25,8 +25,14 @@ def test_edge_panel_getter_and_setter():
     panel_2 = Panel(Orientation.ROOF)
     edge = Edge(panel)
     assert edge.panel == panel
+    assert panel.edges == [edge]
     edge.panel = panel_2
+    assert panel.edges == []
+    assert panel_2.edges == [edge]
     assert edge.panel == panel_2
+    with pytest.raises(TypeError):
+        edge.panel = "panel"
+    
 
 def test_edge_panel_setter_with_invalid_parameters():
     panel = Panel(Orientation.FLOOR)
