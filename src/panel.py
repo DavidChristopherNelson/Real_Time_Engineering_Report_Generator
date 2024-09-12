@@ -1,6 +1,7 @@
 from .orientation import Orientation
 from .location import AbsoluteLocation
 from .utility import validate_instance, is_perpendicular
+from .object_registry import ObjectRegistry
 
 class Panel:
     def __init__(self, _orientation, _absolute_location = None):
@@ -11,14 +12,21 @@ class Panel:
         elif not isinstance(_absolute_location, AbsoluteLocation):
             raise TypeError("""Invalid parameter. Absolute Location must be an 
                             an instance of the Absolute Location class""")
+        
+        self._id = ObjectRegistry.generate_id()
         self._orientation = _orientation
         self._absolute_location = _absolute_location
         self._edges = []
+        ObjectRegistry.add_object(self)
 
 #    def __str__(self):
 #        return f"""Panel object. _orientation: ({self._orientation}). _absolute_location: ({self._absolute_location}). _edges: ({self._edges}). """
 
     # Defining getter and setter methods
+    @property
+    def id(self):
+        return self._id
+    
     @property
     def orientation(self):
         return self._orientation

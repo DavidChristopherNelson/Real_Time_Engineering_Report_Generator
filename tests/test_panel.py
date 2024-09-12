@@ -5,6 +5,7 @@ from src.orientation import Orientation
 from src.location import AbsoluteLocation, RelativeLocation
 from src.edge import Edge
 from src.node import ConnectorNode, CornerNode
+from src.object_registry import ObjectRegistry
 
 # Panel Initialisation Tests
 def test_panel_orientation_initialization():
@@ -12,11 +13,12 @@ def test_panel_orientation_initialization():
     panel = Panel(floor_orientation)
     assert panel.orientation == floor_orientation
     wall_orientation = Orientation.WALL
-    panel = Panel(wall_orientation)
-    assert panel.orientation == wall_orientation
+    panel_2 = Panel(wall_orientation)
+    assert panel_2.orientation == wall_orientation
     roof_orientation = Orientation.ROOF
-    panel = Panel(roof_orientation)
-    assert panel.orientation == roof_orientation
+    panel_3 = Panel(roof_orientation)
+    assert panel_3.orientation == roof_orientation
+    assert panel == ObjectRegistry.get_object_by_id(panel.id)
 
 def test_panel_default_location_initialization():
     panel = Panel(Orientation.FLOOR)

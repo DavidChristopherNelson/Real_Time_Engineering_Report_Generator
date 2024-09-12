@@ -2,9 +2,10 @@ import pytest
 
 from src.edge import Edge
 from src.panel import Panel
-from src.location import RelativeLocation, AbsoluteLocation
+from src.location import RelativeLocation
 from src.orientation import Orientation
 from src.node import Node, ConnectorNode, CornerNode
+from src.object_registry import ObjectRegistry
 
 ###############################################################################
 # Node Tests
@@ -16,6 +17,7 @@ def test_node_initialization():
     assert node.edge == edge
     assert node.relative_location == relative_location
     assert node.mate == None
+    assert node == ObjectRegistry.get_object_by_id(node.id)
 
 def test_invalid_params_node_initialisation():
     edge = Edge(Panel(Orientation.FLOOR))

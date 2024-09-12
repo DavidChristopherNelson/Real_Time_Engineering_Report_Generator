@@ -1,174 +1,131 @@
 {
-  "panels": [
-    "panel_1": {
+  "panels": [{
+      "id": "panel_1",
+      "orientation": "FLOOR",
       "edges": [
-        "edge_1": {
-          [
+        {
+          "id": "edge_1",
+          "corner_nodes": {
             "corner_node_1": {
-              "location": [0.6, 1.2, 0],
-              "mate": corner_node_8
+              "location": {
+                "x": 0.6,
+                "y": 1.2,
+                "z": 0
+              },
+              "mate": "corner_node_8"
             },
             "corner_node_2": {
-              "location": [0.6, -1.2, 0],
-              "mate": corner_node_3
+              "location": {
+                "x": 0.6,
+                "y": -1.2,
+                "z": 0
+              },
+              "mate": "corner_node_3"
             }
-          ],
-          [
+          },
+          "connector_nodes": {
             "connector_node_1": {
-              "location": None,
-              "Mate": "connector_node_10"
+              "location": null,
+              "mate": "connector_node_10"
             },
             "connector_node_2": {
-              "location": None,
-              "Mate": "connector_node_11"
+              "location": null,
+              "mate": "connector_node_11"
             }
-          ]
+          }
         },
-        "edge_2": {
-          [
+        {
+          "id": "edge_2",
+          "corner_nodes": {
             "corner_node_3": {
-              "location": [0.6, -1.2, 0],
-              "mate": corner_node_2
+              "location": {
+                "x": 0.6,
+                "y": -1.2,
+                "z": 0
+              },
+              "mate": "corner_node_2"
             },
             "corner_node_4": {
-              "location": [-0.6, -1.2, 0],
-              "mate": corner_node_5
+              "location": {
+                "x": -0.6,
+                "y": -1.2,
+                "z": 0
+              },
+              "mate": "corner_node_5"
             }
-          ],
-          [
+          },
+          "connector_nodes": {
             "connector_node_3": {
-              "location": None,
-              "Mate": None
+              "location": null,
+              "mate": null
             }
-          ]
-        },
-        "edge_3": {
-          [
-            "corner_node_5": {
-              "location": [-0.6, -1.2, 0],
-              "mate": corner_node_4
-            },
-            "corner_node_6": {
-              "location": [-0.6, 1.2, 0],
-              "mate": corner_node_7
-            }
-          ],
-          [
-            "connector_node_4": {
-              "location": None,
-              "Mate": None
-            },
-            "connector_node_5": {
-              "location": None,
-              "Mate": None
-            }
-          ]
-        },
-        "edge_4": {
-          [
-            "corner_node_7": {
-              "location": [-0.6, 1.2, 0],
-              "mate": corner_node_6
-            },
-            "corner_node_8": {
-              "location": [0.6, 1.2, 0],
-              "mate": corner_node_1
-            }
-          ],
-          [
-            "connector_node_6": {
-              "location": None,
-              "Mate": None
-            }
-          ]
+          }
         }
-      ],
-      "Orientation": "FLOOR"
+      ]
     },
-    "panel_2": {
+    {
+      "id": "panel_2",
+      "orientation": "FLOOR",
       "edges": [
-        "edge_5": {
-          [
+        {
+          "id": "edge_5",
+          "corner_nodes": {
             "corner_node_9": {
-              "location": [0.6, 1.2, 0],
-              "mate": corner_node_16
+              "location": {
+                "x": 0.6,
+                "y": 1.2,
+                "z": 0
+              },
+              "mate": "corner_node_16"
             },
             "corner_node_10": {
-              "location": [0.6, -1.2, 0],
-              "mate": corner_node_11
+              "location": {
+                "x": 0.6,
+                "y": -1.2,
+                "z": 0
+              },
+              "mate": "corner_node_11"
             }
-          ],
-          [
+          },
+          "connector_nodes": {
             "connector_node_7": {
-              "location": None,
-              "Mate": None
+              "location": null,
+              "mate": null
             },
             "connector_node_8": {
-              "location": None,
-              "Mate": None
+              "location": null,
+              "mate": null
             }
-          ]
+          }
         },
-        "edge_6": {
-          [
+        {
+          "id": "edge_6",
+          "corner_nodes": {
             "corner_node_11": {
-              "location": [0.6, -1.2, 0],
-              "mate": corner_node_10
+              "location": {
+                "x": 0.6,
+                "y": -1.2,
+                "z": 0
+              },
+              "mate": "corner_node_10"
             },
             "corner_node_12": {
-              "location": [-0.6, -1.2, 0],
-              "mate": corner_node_13
+              "location": {
+                "x": -0.6,
+                "y": -1.2,
+                "z": 0
+              },
+              "mate": "corner_node_13"
             }
-          ],
-          [
+          },
+          "connector_nodes": {
             "connector_node_9": {
-              "location": None,
-              "Mate": None
+              "location": null,
+              "mate": null
             }
-          ]
-        },
-        "edge_7": {
-          [
-            "corner_node_13": {
-              "location": [-0.6, -1.2, 0],
-              "mate": corner_node_12
-            },
-            "corner_node_14": {
-              "location": [-0.6, 1.2, 0],
-              "mate": corner_node_15
-            }
-          ],
-          [
-            "connector_node_10": {
-              "location": None,
-              "Mate": "connector_node_1"
-            },
-            "connector_node_11": {
-              "location": None,
-              "Mate": "connector_node_2"
-            }
-          ]
-        },
-        "edge_8": {
-          [
-            "corner_node_15": {
-              "location": [-0.6, 1.2, 0],
-              "mate": corner_node_14
-            },
-            "corner_node_16": {
-              "location": [0.6, 1.2, 0],
-              "mate": corner_node_9
-            }
-          ],
-          [
-            "connector_node_12": {
-              "location": None,
-              "Mate": None
-            }
-          ]
+          }
         }
-      ],
-      "Orientation": "FLOOR"
+      ]
     }
   ]
 }

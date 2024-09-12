@@ -1,18 +1,25 @@
 from .panel import Panel
 from .utility import validate_instance, is_on
+from .object_registry import ObjectRegistry
 
 class Edge:
     def __init__(self, panel):
         validate_instance(panel, Panel)
+        self._id = ObjectRegistry.generate_id()
         self._panel = panel
         self._connector_nodes = []
         self._corner_nodes = []
         panel.edges.append(self)
+        ObjectRegistry.add_object(self)
 
 #    def __str__(self):
 #        return f"""Edge object. Belongs to panel: ({self._panel}). _connector_nodes: ({self._connector_nodes}). _corner_nodes: ({self._corner_nodes})"""
 
     # Defining getter and setter methods
+    @property
+    def id(self):
+        return self._id
+
     @property
     def panel(self):
         return self._panel

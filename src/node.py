@@ -1,6 +1,7 @@
 from .edge import Edge
 from .location import AbsoluteLocation, RelativeLocation
 from .utility import validate_instance
+from .object_registry import ObjectRegistry
 
 class Node:
     _instances = []
@@ -20,11 +21,18 @@ class Node:
         if absolute_location is None:
             absolute_location = AbsoluteLocation(None, None, None)
         validate_instance(absolute_location, AbsoluteLocation)
+
+        self._id = ObjectRegistry.generate_id()
         self._edge = edge
         self._relative_location = relative_location
         self._absolute_location = absolute_location
         self._mate = None
         Node._instances.append(self)
+        ObjectRegistry.add_object(self)
+
+    @property
+    def id(self):
+        return self._id
 
     @property
     def edge(self):

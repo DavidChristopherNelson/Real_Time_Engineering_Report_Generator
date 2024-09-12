@@ -3,14 +3,16 @@ import pytest
 from src.panel import Panel
 from src.orientation import Orientation
 from src.edge import Edge
-from src.location import RelativeLocation, AbsoluteLocation
+from src.location import RelativeLocation
 from src.node import ConnectorNode, CornerNode
+from src.object_registry import ObjectRegistry
 
 # Test initialization
 def test_edge_initialization():
     panel = Panel(Orientation.FLOOR)
     edge = Edge(panel)
     assert edge.panel == panel
+    assert edge == ObjectRegistry.get_object_by_id(edge.id)
 
 def test_invalid_params_edge_initialisation():
     with pytest.raises(TypeError):
